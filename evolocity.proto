@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+enum VehicleType {
+    OTHER = 0;
+    BIKE = 1;
+    TRIKE = 2;
+    KART = 3;
+}
+
+enum VehicleClass {
+    STANDARD = 0;
+    OPEN = 1;
+    COMPETITION = 2;
+}
+
+enum EnergyRequestType {
+    ALL = 0;
+    TIMESTAMP = 1;
+}
+
+message ConfigRequest {
+}
+
+message ConfigResponse {
+    int32 serial_number = 1;
+    int32 team_number = 2;
+    optional VehicleType vehicle_type = 3;
+    optional VehicleClass vehicle_class = 4;
+}
+
+message EnergyFrame {
+    uint32 end_timestamp = 1;
+    int32 average_voltage = 2;
+    int32 average_current = 3;
+}
+
+message TimestampPair {
+    uint32 start_timestamp = 1;
+    uint32 end_timestamp = 2;
+}
+
+message EnergyRequest {
+    optional TimestampPair timestamp_pair = 1;
+}
+
+message EnergyResponse {
+    repeated EnergyFrame frames = 1;
+}
