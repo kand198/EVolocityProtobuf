@@ -6,13 +6,13 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
+PB_BIND(Request, Request, AUTO)
+
+
+PB_BIND(ResetRequest, ResetRequest, AUTO)
+
+
 PB_BIND(ConfigRequest, ConfigRequest, AUTO)
-
-
-PB_BIND(ConfigResponse, ConfigResponse, AUTO)
-
-
-PB_BIND(EnergyFrame, EnergyFrame, AUTO)
 
 
 PB_BIND(TimestampPair, TimestampPair, AUTO)
@@ -21,9 +21,34 @@ PB_BIND(TimestampPair, TimestampPair, AUTO)
 PB_BIND(EnergyRequest, EnergyRequest, AUTO)
 
 
+PB_BIND(TimeRequest, TimeRequest, AUTO)
+
+
+PB_BIND(StatusRequest, StatusRequest, AUTO)
+
+
+PB_BIND(response, response, AUTO)
+
+
+PB_BIND(Ack, Ack, AUTO)
+
+
+PB_BIND(ConfigResponse, ConfigResponse, AUTO)
+
+
+PB_BIND(EnergyFrame, EnergyFrame, AUTO)
+
+
 PB_BIND(EnergyResponse, EnergyResponse, AUTO)
 
 
+PB_BIND(TimeResponse, TimeResponse, AUTO)
+
+
+PB_BIND(StatusResponse, StatusResponse, AUTO)
+
+
+PB_BIND(ConfigContent, ConfigContent, AUTO)
 
 
 

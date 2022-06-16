@@ -10,41 +10,41 @@
 #endif
 
 /* Enum definitions */
-typedef enum _VehicleType { 
-    VehicleType_OTHER = 0, 
-    VehicleType_BIKE = 1, 
-    VehicleType_TRIKE = 2, 
-    VehicleType_KART = 3 
-} VehicleType;
-
+/* *
+ Content */
 typedef enum _VehicleClass { 
     VehicleClass_STANDARD = 0, 
     VehicleClass_OPEN = 1, 
     VehicleClass_COMPETITION = 2 
 } VehicleClass;
 
-typedef enum _EnergyRequestType { 
-    EnergyRequestType_ALL = 0, 
-    EnergyRequestType_TIMESTAMP = 1 
-} EnergyRequestType;
-
 /* Struct definitions */
-typedef struct _ConfigRequest { 
+typedef struct _Ack { 
     char dummy_field;
-} ConfigRequest;
+} Ack;
 
 typedef struct _EnergyResponse { 
     pb_callback_t frames; 
 } EnergyResponse;
 
-typedef struct _ConfigResponse { 
-    int32_t serial_number; 
-    int32_t team_number; 
-    bool has_vehicle_type;
-    VehicleType vehicle_type; 
+typedef struct _ResetRequest { 
+    char dummy_field;
+} ResetRequest;
+
+typedef struct _StatusRequest { 
+    char dummy_field;
+} StatusRequest;
+
+typedef struct _TimeResponse { 
+    char dummy_field;
+} TimeResponse;
+
+typedef struct _ConfigContent { 
+    uint32_t serial_number; 
+    uint32_t team_number; 
     bool has_vehicle_class;
     VehicleClass vehicle_class; 
-} ConfigResponse;
+} ConfigContent;
 
 typedef struct _EnergyFrame { 
     uint32_t end_timestamp; 
@@ -52,29 +52,74 @@ typedef struct _EnergyFrame {
     int32_t average_current; 
 } EnergyFrame;
 
+typedef struct _StatusResponse { 
+    uint32_t uptime; 
+    uint32_t flash_usage; 
+    int32_t temperature; 
+    uint32_t voltage; 
+    uint32_t current; 
+} StatusResponse;
+
+typedef struct _TimeRequest { 
+    bool has_time;
+    uint32_t time; 
+} TimeRequest;
+
 typedef struct _TimestampPair { 
     uint32_t start_timestamp; 
     uint32_t end_timestamp; 
 } TimestampPair;
+
+typedef struct _ConfigRequest { 
+    bool has_content;
+    ConfigContent content; 
+} ConfigRequest;
+
+typedef struct _ConfigResponse { 
+    bool has_content;
+    ConfigContent content; 
+} ConfigResponse;
 
 typedef struct _EnergyRequest { 
     bool has_timestamp_pair;
     TimestampPair timestamp_pair; 
 } EnergyRequest;
 
+/* *
+ Requests */
+typedef struct _Request { 
+    uint32_t timestamp; 
+    uint32_t uid; 
+    pb_size_t which_payload;
+    union {
+        ResetRequest reset;
+        ConfigRequest config;
+        EnergyRequest energy;
+        TimeRequest time;
+        StatusRequest status;
+    } payload; 
+} Request;
+
+/* *
+ Responses */
+typedef struct _response { 
+    uint32_t timestamp; 
+    uint32_t uid; 
+    pb_size_t which_payload;
+    union {
+        Ack ack;
+        ConfigResponse config;
+        EnergyResponse energy;
+        TimeResponse time;
+        StatusResponse status;
+    } payload; 
+} response;
+
 
 /* Helper constants for enums */
-#define _VehicleType_MIN VehicleType_OTHER
-#define _VehicleType_MAX VehicleType_KART
-#define _VehicleType_ARRAYSIZE ((VehicleType)(VehicleType_KART+1))
-
 #define _VehicleClass_MIN VehicleClass_STANDARD
 #define _VehicleClass_MAX VehicleClass_COMPETITION
 #define _VehicleClass_ARRAYSIZE ((VehicleClass)(VehicleClass_COMPETITION+1))
-
-#define _EnergyRequestType_MIN EnergyRequestType_ALL
-#define _EnergyRequestType_MAX EnergyRequestType_TIMESTAMP
-#define _EnergyRequestType_ARRAYSIZE ((EnergyRequestType)(EnergyRequestType_TIMESTAMP+1))
 
 
 #ifdef __cplusplus
@@ -82,52 +127,98 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define ConfigRequest_init_default               {0}
-#define ConfigResponse_init_default              {0, 0, false, _VehicleType_MIN, false, _VehicleClass_MIN}
-#define EnergyFrame_init_default                 {0, 0, 0}
+#define Request_init_default                     {0, 0, 0, {ResetRequest_init_default}}
+#define ResetRequest_init_default                {0}
+#define ConfigRequest_init_default               {false, ConfigContent_init_default}
 #define TimestampPair_init_default               {0, 0}
 #define EnergyRequest_init_default               {false, TimestampPair_init_default}
+#define TimeRequest_init_default                 {false, 0}
+#define StatusRequest_init_default               {0}
+#define response_init_default                    {0, 0, 0, {Ack_init_default}}
+#define Ack_init_default                         {0}
+#define ConfigResponse_init_default              {false, ConfigContent_init_default}
+#define EnergyFrame_init_default                 {0, 0, 0}
 #define EnergyResponse_init_default              {{{NULL}, NULL}}
-#define ConfigRequest_init_zero                  {0}
-#define ConfigResponse_init_zero                 {0, 0, false, _VehicleType_MIN, false, _VehicleClass_MIN}
-#define EnergyFrame_init_zero                    {0, 0, 0}
+#define TimeResponse_init_default                {0}
+#define StatusResponse_init_default              {0, 0, 0, 0, 0}
+#define ConfigContent_init_default               {0, 0, false, _VehicleClass_MIN}
+#define Request_init_zero                        {0, 0, 0, {ResetRequest_init_zero}}
+#define ResetRequest_init_zero                   {0}
+#define ConfigRequest_init_zero                  {false, ConfigContent_init_zero}
 #define TimestampPair_init_zero                  {0, 0}
 #define EnergyRequest_init_zero                  {false, TimestampPair_init_zero}
+#define TimeRequest_init_zero                    {false, 0}
+#define StatusRequest_init_zero                  {0}
+#define response_init_zero                       {0, 0, 0, {Ack_init_zero}}
+#define Ack_init_zero                            {0}
+#define ConfigResponse_init_zero                 {false, ConfigContent_init_zero}
+#define EnergyFrame_init_zero                    {0, 0, 0}
 #define EnergyResponse_init_zero                 {{{NULL}, NULL}}
+#define TimeResponse_init_zero                   {0}
+#define StatusResponse_init_zero                 {0, 0, 0, 0, 0}
+#define ConfigContent_init_zero                  {0, 0, false, _VehicleClass_MIN}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define EnergyResponse_frames_tag                1
-#define ConfigResponse_serial_number_tag         1
-#define ConfigResponse_team_number_tag           2
-#define ConfigResponse_vehicle_type_tag          3
-#define ConfigResponse_vehicle_class_tag         4
+#define ConfigContent_serial_number_tag          1
+#define ConfigContent_team_number_tag            2
+#define ConfigContent_vehicle_class_tag          3
 #define EnergyFrame_end_timestamp_tag            1
 #define EnergyFrame_average_voltage_tag          2
 #define EnergyFrame_average_current_tag          3
+#define StatusResponse_uptime_tag                1
+#define StatusResponse_flash_usage_tag           2
+#define StatusResponse_temperature_tag           3
+#define StatusResponse_voltage_tag               4
+#define StatusResponse_current_tag               5
+#define TimeRequest_time_tag                     1
 #define TimestampPair_start_timestamp_tag        1
 #define TimestampPair_end_timestamp_tag          2
+#define ConfigRequest_content_tag                1
+#define ConfigResponse_content_tag               1
 #define EnergyRequest_timestamp_pair_tag         1
+#define Request_timestamp_tag                    1
+#define Request_uid_tag                          2
+#define Request_reset_tag                        3
+#define Request_config_tag                       4
+#define Request_energy_tag                       5
+#define Request_time_tag                         6
+#define Request_status_tag                       7
+#define response_timestamp_tag                   1
+#define response_uid_tag                         2
+#define response_ack_tag                         3
+#define response_config_tag                      4
+#define response_energy_tag                      5
+#define response_time_tag                        6
+#define response_status_tag                      7
 
 /* Struct field encoding specification for nanopb */
-#define ConfigRequest_FIELDLIST(X, a) \
+#define Request_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT32,   timestamp,         1) \
+X(a, STATIC,   SINGULAR, UINT32,   uid,               2) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,reset,payload.reset),   3) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,config,payload.config),   4) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,energy,payload.energy),   5) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,time,payload.time),   6) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,status,payload.status),   7)
+#define Request_CALLBACK NULL
+#define Request_DEFAULT NULL
+#define Request_payload_reset_MSGTYPE ResetRequest
+#define Request_payload_config_MSGTYPE ConfigRequest
+#define Request_payload_energy_MSGTYPE EnergyRequest
+#define Request_payload_time_MSGTYPE TimeRequest
+#define Request_payload_status_MSGTYPE StatusRequest
 
+#define ResetRequest_FIELDLIST(X, a) \
+
+#define ResetRequest_CALLBACK NULL
+#define ResetRequest_DEFAULT NULL
+
+#define ConfigRequest_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  content,           1)
 #define ConfigRequest_CALLBACK NULL
 #define ConfigRequest_DEFAULT NULL
-
-#define ConfigResponse_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, INT32,    serial_number,     1) \
-X(a, STATIC,   SINGULAR, INT32,    team_number,       2) \
-X(a, STATIC,   OPTIONAL, UENUM,    vehicle_type,      3) \
-X(a, STATIC,   OPTIONAL, UENUM,    vehicle_class,     4)
-#define ConfigResponse_CALLBACK NULL
-#define ConfigResponse_DEFAULT NULL
-
-#define EnergyFrame_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, UINT32,   end_timestamp,     1) \
-X(a, STATIC,   SINGULAR, INT32,    average_voltage,   2) \
-X(a, STATIC,   SINGULAR, INT32,    average_current,   3)
-#define EnergyFrame_CALLBACK NULL
-#define EnergyFrame_DEFAULT NULL
+#define ConfigRequest_content_MSGTYPE ConfigContent
 
 #define TimestampPair_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, UINT32,   start_timestamp,   1) \
@@ -141,33 +232,125 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  timestamp_pair,    1)
 #define EnergyRequest_DEFAULT NULL
 #define EnergyRequest_timestamp_pair_MSGTYPE TimestampPair
 
+#define TimeRequest_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, UINT32,   time,              1)
+#define TimeRequest_CALLBACK NULL
+#define TimeRequest_DEFAULT NULL
+
+#define StatusRequest_FIELDLIST(X, a) \
+
+#define StatusRequest_CALLBACK NULL
+#define StatusRequest_DEFAULT NULL
+
+#define response_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT32,   timestamp,         1) \
+X(a, STATIC,   SINGULAR, UINT32,   uid,               2) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,ack,payload.ack),   3) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,config,payload.config),   4) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,energy,payload.energy),   5) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,time,payload.time),   6) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,status,payload.status),   7)
+#define response_CALLBACK NULL
+#define response_DEFAULT NULL
+#define response_payload_ack_MSGTYPE Ack
+#define response_payload_config_MSGTYPE ConfigResponse
+#define response_payload_energy_MSGTYPE EnergyResponse
+#define response_payload_time_MSGTYPE TimeResponse
+#define response_payload_status_MSGTYPE StatusResponse
+
+#define Ack_FIELDLIST(X, a) \
+
+#define Ack_CALLBACK NULL
+#define Ack_DEFAULT NULL
+
+#define ConfigResponse_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  content,           1)
+#define ConfigResponse_CALLBACK NULL
+#define ConfigResponse_DEFAULT NULL
+#define ConfigResponse_content_MSGTYPE ConfigContent
+
+#define EnergyFrame_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT32,   end_timestamp,     1) \
+X(a, STATIC,   SINGULAR, INT32,    average_voltage,   2) \
+X(a, STATIC,   SINGULAR, INT32,    average_current,   3)
+#define EnergyFrame_CALLBACK NULL
+#define EnergyFrame_DEFAULT NULL
+
 #define EnergyResponse_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  frames,            1)
 #define EnergyResponse_CALLBACK pb_default_field_callback
 #define EnergyResponse_DEFAULT NULL
 #define EnergyResponse_frames_MSGTYPE EnergyFrame
 
+#define TimeResponse_FIELDLIST(X, a) \
+
+#define TimeResponse_CALLBACK NULL
+#define TimeResponse_DEFAULT NULL
+
+#define StatusResponse_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT32,   uptime,            1) \
+X(a, STATIC,   SINGULAR, UINT32,   flash_usage,       2) \
+X(a, STATIC,   SINGULAR, INT32,    temperature,       3) \
+X(a, STATIC,   SINGULAR, UINT32,   voltage,           4) \
+X(a, STATIC,   SINGULAR, UINT32,   current,           5)
+#define StatusResponse_CALLBACK NULL
+#define StatusResponse_DEFAULT NULL
+
+#define ConfigContent_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT32,   serial_number,     1) \
+X(a, STATIC,   SINGULAR, UINT32,   team_number,       2) \
+X(a, STATIC,   OPTIONAL, UENUM,    vehicle_class,     3)
+#define ConfigContent_CALLBACK NULL
+#define ConfigContent_DEFAULT NULL
+
+extern const pb_msgdesc_t Request_msg;
+extern const pb_msgdesc_t ResetRequest_msg;
 extern const pb_msgdesc_t ConfigRequest_msg;
-extern const pb_msgdesc_t ConfigResponse_msg;
-extern const pb_msgdesc_t EnergyFrame_msg;
 extern const pb_msgdesc_t TimestampPair_msg;
 extern const pb_msgdesc_t EnergyRequest_msg;
+extern const pb_msgdesc_t TimeRequest_msg;
+extern const pb_msgdesc_t StatusRequest_msg;
+extern const pb_msgdesc_t response_msg;
+extern const pb_msgdesc_t Ack_msg;
+extern const pb_msgdesc_t ConfigResponse_msg;
+extern const pb_msgdesc_t EnergyFrame_msg;
 extern const pb_msgdesc_t EnergyResponse_msg;
+extern const pb_msgdesc_t TimeResponse_msg;
+extern const pb_msgdesc_t StatusResponse_msg;
+extern const pb_msgdesc_t ConfigContent_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
+#define Request_fields &Request_msg
+#define ResetRequest_fields &ResetRequest_msg
 #define ConfigRequest_fields &ConfigRequest_msg
-#define ConfigResponse_fields &ConfigResponse_msg
-#define EnergyFrame_fields &EnergyFrame_msg
 #define TimestampPair_fields &TimestampPair_msg
 #define EnergyRequest_fields &EnergyRequest_msg
+#define TimeRequest_fields &TimeRequest_msg
+#define StatusRequest_fields &StatusRequest_msg
+#define response_fields &response_msg
+#define Ack_fields &Ack_msg
+#define ConfigResponse_fields &ConfigResponse_msg
+#define EnergyFrame_fields &EnergyFrame_msg
 #define EnergyResponse_fields &EnergyResponse_msg
+#define TimeResponse_fields &TimeResponse_msg
+#define StatusResponse_fields &StatusResponse_msg
+#define ConfigContent_fields &ConfigContent_msg
 
 /* Maximum encoded size of messages (where known) */
+/* response_size depends on runtime parameters */
 /* EnergyResponse_size depends on runtime parameters */
-#define ConfigRequest_size                       0
-#define ConfigResponse_size                      26
+#define Ack_size                                 0
+#define ConfigContent_size                       14
+#define ConfigRequest_size                       16
+#define ConfigResponse_size                      16
 #define EnergyFrame_size                         28
 #define EnergyRequest_size                       14
+#define Request_size                             30
+#define ResetRequest_size                        0
+#define StatusRequest_size                       0
+#define StatusResponse_size                      35
+#define TimeRequest_size                         6
+#define TimeResponse_size                        0
 #define TimestampPair_size                       12
 
 #ifdef __cplusplus

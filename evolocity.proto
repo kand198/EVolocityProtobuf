@@ -1,37 +1,25 @@
 syntax = "proto3";
 
-enum VehicleType {
-    OTHER = 0;
-    BIKE = 1;
-    TRIKE = 2;
-    KART = 3;
+/**
+ * Requests
+ */
+message Request {
+    uint32 timestamp = 1;
+    uint32 uid = 2;
+    oneof payload {
+        ResetRequest reset = 3;
+        ConfigRequest config = 4;
+        EnergyRequest energy = 5;
+        TimeRequest time = 6;
+        StatusRequest status = 7;
+    }
 }
 
-enum VehicleClass {
-    STANDARD = 0;
-    OPEN = 1;
-    COMPETITION = 2;
-}
-
-enum EnergyRequestType {
-    ALL = 0;
-    TIMESTAMP = 1;
+message ResetRequest {
 }
 
 message ConfigRequest {
-}
-
-message ConfigResponse {
-    int32 serial_number = 1;
-    int32 team_number = 2;
-    optional VehicleType vehicle_type = 3;
-    optional VehicleClass vehicle_class = 4;
-}
-
-message EnergyFrame {
-    uint32 end_timestamp = 1;
-    int32 average_voltage = 2;
-    int32 average_current = 3;
+    optional ConfigContent content = 1;
 }
 
 message TimestampPair {
@@ -43,6 +31,67 @@ message EnergyRequest {
     optional TimestampPair timestamp_pair = 1;
 }
 
+message TimeRequest {
+    optional uint32 time = 1;
+}
+
+message StatusRequest {
+}
+
+/**
+ * Responses
+ */
+message response {
+    uint32 timestamp = 1;
+    uint32 uid = 2;
+    oneof payload {
+        Ack ack = 3;
+        ConfigResponse config = 4;
+        EnergyResponse energy = 5;
+        TimeResponse time = 6;
+        StatusResponse status = 7;
+    }
+}
+
+message Ack {
+}
+
+message ConfigResponse {
+    ConfigContent content = 1;
+}
+
+message EnergyFrame {
+    uint32 end_timestamp = 1;
+    int32 average_voltage = 2;
+    int32 average_current = 3;
+}
+ 
 message EnergyResponse {
     repeated EnergyFrame frames = 1;
+}
+
+message TimeResponse {
+}
+
+message StatusResponse {
+    uint32 uptime = 1;
+    uint32 flash_usage = 2;
+    int32 temperature = 3;
+    uint32 voltage = 4;
+    uint32 current = 5;
+}
+
+/**
+* Content
+*/
+enum VehicleClass {
+    STANDARD = 0;
+    OPEN = 1;
+    COMPETITION = 2;
+}
+
+message ConfigContent {
+    uint32 serial_number = 1;
+    uint32 team_number = 2;
+    optional VehicleClass vehicle_class = 3;
 }
