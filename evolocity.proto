@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "nanopb.proto";
 
 /**
  * Requests
@@ -41,7 +42,7 @@ message StatusRequest {
 /**
  * Responses
  */
-message response {
+message Response {
     uint32 timestamp = 1;
     uint32 uid = 2;
     oneof payload {
@@ -67,7 +68,7 @@ message EnergyFrame {
 }
  
 message EnergyResponse {
-    repeated EnergyFrame frames = 1;
+    repeated EnergyFrame frames = 1 [(nanopb).max_count = 16];
 }
 
 message TimeResponse {

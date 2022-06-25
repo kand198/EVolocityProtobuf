@@ -27,7 +27,7 @@ PB_BIND(TimeRequest, TimeRequest, AUTO)
 PB_BIND(StatusRequest, StatusRequest, AUTO)
 
 
-PB_BIND(response, response, AUTO)
+PB_BIND(Response, Response, AUTO)
 
 
 PB_BIND(Ack, Ack, AUTO)
