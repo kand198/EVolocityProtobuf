@@ -1,5 +1,8 @@
 syntax = "proto3";
-import "nanopb.proto";
+// Compile for TS in the top level with:
+// protoc --plugin=protoc-gen-ts_proto=.\node_modules\.bin\protoc-gen-ts_proto.cmd --ts_proto_out=./lib/. ./proto/evolocity.proto
+import "proto/nanopb-win/generator/proto/nanopb.proto"; // TypeScript import
+// import "nanopb.proto" // C import
 
 /**
  * Requests
