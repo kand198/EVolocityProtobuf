@@ -46,6 +46,7 @@ typedef struct _EnergyFrame {
     uint32_t end_timestamp; 
     int32_t average_voltage; 
     int32_t average_current; 
+    uint32_t total_energy; 
 } EnergyFrame;
 
 typedef struct _StatusResponse { 
@@ -138,7 +139,7 @@ extern "C" {
 #define Response_init_default                    {0, 0, 0, {Ack_init_default}}
 #define Ack_init_default                         {0}
 #define ConfigResponse_init_default              {false, ConfigContent_init_default}
-#define EnergyFrame_init_default                 {0, 0, 0}
+#define EnergyFrame_init_default                 {0, 0, 0, 0}
 #define EnergyResponse_init_default              {0, {EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default, EnergyFrame_init_default}}
 #define TimeResponse_init_default                {0}
 #define StatusResponse_init_default              {0, 0, 0, 0, 0}
@@ -153,7 +154,7 @@ extern "C" {
 #define Response_init_zero                       {0, 0, 0, {Ack_init_zero}}
 #define Ack_init_zero                            {0}
 #define ConfigResponse_init_zero                 {false, ConfigContent_init_zero}
-#define EnergyFrame_init_zero                    {0, 0, 0}
+#define EnergyFrame_init_zero                    {0, 0, 0, 0}
 #define EnergyResponse_init_zero                 {0, {EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero, EnergyFrame_init_zero}}
 #define TimeResponse_init_zero                   {0}
 #define StatusResponse_init_zero                 {0, 0, 0, 0, 0}
@@ -166,6 +167,7 @@ extern "C" {
 #define EnergyFrame_end_timestamp_tag            1
 #define EnergyFrame_average_voltage_tag          2
 #define EnergyFrame_average_current_tag          3
+#define EnergyFrame_total_energy_tag             4
 #define StatusResponse_uptime_tag                1
 #define StatusResponse_flash_usage_tag           2
 #define StatusResponse_temperature_tag           3
@@ -273,7 +275,8 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  content,           1)
 #define EnergyFrame_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, UINT32,   end_timestamp,     1) \
 X(a, STATIC,   SINGULAR, INT32,    average_voltage,   2) \
-X(a, STATIC,   SINGULAR, INT32,    average_current,   3)
+X(a, STATIC,   SINGULAR, INT32,    average_current,   3) \
+X(a, STATIC,   SINGULAR, UINT32,   total_energy,      4)
 #define EnergyFrame_CALLBACK NULL
 #define EnergyFrame_DEFAULT NULL
 
@@ -342,12 +345,12 @@ extern const pb_msgdesc_t ConfigContent_msg;
 #define ConfigContent_size                       14
 #define ConfigRequest_size                       16
 #define ConfigResponse_size                      16
-#define EnergyFrame_size                         28
+#define EnergyFrame_size                         34
 #define EnergyRequest_size                       14
-#define EnergyResponse_size                      480
+#define EnergyResponse_size                      576
 #define Request_size                             30
 #define ResetRequest_size                        0
-#define Response_size                            495
+#define Response_size                            591
 #define StatusRequest_size                       0
 #define StatusResponse_size                      35
 #define TimeRequest_size                         6
