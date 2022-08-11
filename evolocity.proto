@@ -68,6 +68,7 @@ message EnergyFrame {
     uint32 end_timestamp = 1;
     int32 average_voltage = 2;
     int32 average_current = 3;
+    uint32 total_energy = 4;
 }
  
 message EnergyResponse {
