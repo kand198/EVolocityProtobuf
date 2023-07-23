@@ -27,6 +27,9 @@ PB_BIND(TimeRequest, TimeRequest, AUTO)
 PB_BIND(StatusRequest, StatusRequest, AUTO)
 
 
+PB_BIND(DfuRequest, DfuRequest, AUTO)
+
+
 PB_BIND(Response, Response, 2)
 
 

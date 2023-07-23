@@ -23,6 +23,10 @@ typedef struct _Ack {
     char dummy_field;
 } Ack;
 
+typedef struct _DfuRequest { 
+    char dummy_field;
+} DfuRequest;
+
 typedef struct _ResetRequest { 
     char dummy_field;
 } ResetRequest;
@@ -99,6 +103,7 @@ typedef struct _Request {
         EnergyRequest energy;
         TimeRequest time;
         StatusRequest status;
+        DfuRequest dfu;
     } payload; 
 } Request;
 
@@ -136,6 +141,7 @@ extern "C" {
 #define EnergyRequest_init_default               {false, TimestampPair_init_default}
 #define TimeRequest_init_default                 {false, 0}
 #define StatusRequest_init_default               {0}
+#define DfuRequest_init_default                  {0}
 #define Response_init_default                    {0, 0, 0, {Ack_init_default}}
 #define Ack_init_default                         {0}
 #define ConfigResponse_init_default              {false, ConfigContent_init_default}
@@ -151,6 +157,7 @@ extern "C" {
 #define EnergyRequest_init_zero                  {false, TimestampPair_init_zero}
 #define TimeRequest_init_zero                    {false, 0}
 #define StatusRequest_init_zero                  {0}
+#define DfuRequest_init_zero                     {0}
 #define Response_init_zero                       {0, 0, 0, {Ack_init_zero}}
 #define Ack_init_zero                            {0}
 #define ConfigResponse_init_zero                 {false, ConfigContent_init_zero}
@@ -187,6 +194,7 @@ extern "C" {
 #define Request_energy_tag                       5
 #define Request_time_tag                         6
 #define Request_status_tag                       7
+#define Request_dfu_tag                          8
 #define Response_timestamp_tag                   1
 #define Response_uid_tag                         2
 #define Response_ack_tag                         3
@@ -203,7 +211,8 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (payload,reset,payload.reset),   3) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload,config,payload.config),   4) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload,energy,payload.energy),   5) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload,time,payload.time),   6) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (payload,status,payload.status),   7)
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,status,payload.status),   7) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload,dfu,payload.dfu),   8)
 #define Request_CALLBACK NULL
 #define Request_DEFAULT NULL
 #define Request_payload_reset_MSGTYPE ResetRequest
@@ -211,6 +220,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (payload,status,payload.status),   7)
 #define Request_payload_energy_MSGTYPE EnergyRequest
 #define Request_payload_time_MSGTYPE TimeRequest
 #define Request_payload_status_MSGTYPE StatusRequest
+#define Request_payload_dfu_MSGTYPE DfuRequest
 
 #define ResetRequest_FIELDLIST(X, a) \
 
@@ -244,6 +254,11 @@ X(a, STATIC,   OPTIONAL, UINT32,   time,              1)
 
 #define StatusRequest_CALLBACK NULL
 #define StatusRequest_DEFAULT NULL
+
+#define DfuRequest_FIELDLIST(X, a) \
+
+#define DfuRequest_CALLBACK NULL
+#define DfuRequest_DEFAULT NULL
 
 #define Response_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, UINT32,   timestamp,         1) \
@@ -314,6 +329,7 @@ extern const pb_msgdesc_t TimestampPair_msg;
 extern const pb_msgdesc_t EnergyRequest_msg;
 extern const pb_msgdesc_t TimeRequest_msg;
 extern const pb_msgdesc_t StatusRequest_msg;
+extern const pb_msgdesc_t DfuRequest_msg;
 extern const pb_msgdesc_t Response_msg;
 extern const pb_msgdesc_t Ack_msg;
 extern const pb_msgdesc_t ConfigResponse_msg;
@@ -331,6 +347,7 @@ extern const pb_msgdesc_t ConfigContent_msg;
 #define EnergyRequest_fields &EnergyRequest_msg
 #define TimeRequest_fields &TimeRequest_msg
 #define StatusRequest_fields &StatusRequest_msg
+#define DfuRequest_fields &DfuRequest_msg
 #define Response_fields &Response_msg
 #define Ack_fields &Ack_msg
 #define ConfigResponse_fields &ConfigResponse_msg
@@ -345,6 +362,7 @@ extern const pb_msgdesc_t ConfigContent_msg;
 #define ConfigContent_size                       14
 #define ConfigRequest_size                       16
 #define ConfigResponse_size                      16
+#define DfuRequest_size                          0
 #define EnergyFrame_size                         34
 #define EnergyRequest_size                       14
 #define EnergyResponse_size                      576

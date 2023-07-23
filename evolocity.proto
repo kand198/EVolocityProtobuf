@@ -16,6 +16,7 @@ message Request {
         EnergyRequest energy = 5;
         TimeRequest time = 6;
         StatusRequest status = 7;
+        DfuRequest dfu = 8;
     }
 }
 
@@ -40,6 +41,9 @@ message TimeRequest {
 }
 
 message StatusRequest {
+}
+
+message DfuRequest {
 }
 
 /**
