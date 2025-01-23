@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 protobuf = "*"
 grpcio-tools = "*"
+python3-protobuf = "*"
 
 [dev-packages]
 

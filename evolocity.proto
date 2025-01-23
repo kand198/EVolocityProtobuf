@@ -73,6 +73,7 @@ message EnergyFrame {
     int32 average_voltage = 2;
     int32 average_current = 3;
     uint32 total_energy = 4;
+    int32 penalty = 5;
 }
  
 message EnergyResponse {
